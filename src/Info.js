@@ -4,33 +4,24 @@ import React from "react";
 class Info extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
+    this.state = {
+      count: 0,
+      title: "Helloo",
+    };
+  }
+  buttonPressed() {
+    this.setState({
+      count: this.state.count + 1,
+    });
   }
   render() {
-    const title = this.props.title;
-    const showtitle = true;
-
-    if (showtitle) {
-      return (
-        <div>
-          <h1>{showtitle ? title : ""}</h1>
-          <h1>User Name</h1>
-          <p>Lakshman_Kommula</p>
-        </div>
-      );
-    } else {
-      return <p>empty</p>;
-    }
+    return (
+      <div>
+        <p> Count: {this.state.count}</p>
+        <button onClick={() => this.buttonPressed()}>Click Me!</button>
+      </div>
+    );
   }
 }
-
-Info.defaultProps = {
-  title: "Default",
-  number: 23232,
-};
-
-Info.propTypes = {
-  title: PropTypes.string,
-};
 
 export default Info;

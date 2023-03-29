@@ -1,37 +1,44 @@
 import { PropTypes } from "prop-types";
 import "./App.css";
 import Info from "./Info.js";
+import { useState } from "react";
 
-/*adding value to the props*/
 function App() {
   return (
     <div className="App">
-      <Info title="My App" />
-      <Additem text="Sai" number="Hello" sai="kommula" />
-      <Additem text="Sai" number={2} sai="kommula" />
+      <Info />
+      <ButtonState></ButtonState>
     </div>
   );
 }
 
-/*creating a props and using below*/
-function Additem(props) {
+//Functional Components
+function ButtonState() {
+  const [title, setTitle] = useState("hello");
+  const [count, setCount] = useState(1);
+
+  const updateTitle = () => {
+    setTitle("title Changed");
+  };
+
+  const updateCounter = () => {
+    setCount(count + 1);
+  };
   return (
-    <form>
-      <label for="text-form">write something......</label>
-      <input type="text" value={props.text} id="text-form" />
-      <p>{props.number}</p>
-    </form>
+    <div>
+      <Data title={title} count={count} />
+      <button onClick={updateTitle}>Update Title</button>
+      <button onClick={updateCounter}>Update Counter</button>
+    </div>
   );
 }
 
-Additem.defaultProps = {
-  number: 22,
-  text: "Defualt",
-};
-
-Additem.defaultProps = {
-  number: PropTypes.number,
-  text: PropTypes.string,
-};
-
+function Data(props) {
+  return (
+    <div>
+      <p>Title: {props.title}</p>
+      <p>Count: {props.count}</p>
+    </div>
+  );
+}
 export default App;
