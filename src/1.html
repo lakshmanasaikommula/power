@@ -1,0 +1,196 @@
+<script>
+    window.addEventListener('load', function () {
+        $(document).ready(function () {
+
+            document.title = "Quote Machine";
+
+            if ($("link") && $("link").length > 0) {
+                $("link")[0].href = 'https://www.bakerhughes.com/themes/custom/bh/favicon.ico'
+
+            }
+
+            cpq.server.executeScript("GetQuoteStatusName", {},
+                function (data) {
+                    localStorage.setItem("Quote_Status", data.Quote_Status);
+                    cpq.models.Quote_Status = data.Quote_Status
+                    if (document.getElementsByClassName("generatePDFDocument picon")[0] != undefined && (data.Quote_Status == "Quote in Draft / Preparation" || data.Quote_Status == "Quote Pending Internal Approval")) {
+                        document.getElementsByClassName("generatePDFDocument picon")[0].classList.add("info");
+                        document.getElementsByClassName("generatePDFDocument picon")[0].classList.add("disable-picon");
+                        document.getElementsByClassName("generatePDFDocument picon")[0].setAttribute('title', 'You cannot generate a document because approval is required for the quote. Instead, you may choose to preview the document');
+                        document.getElementsByClassName("generateWordDocument wicon")[0].classList.add("info");
+                        document.getElementsByClassName("generateWordDocument wicon")[0].classList.add("disable-wicon");
+                        document.getElementsByClassName("generateWordDocument wicon")[0].setAttribute('title', 'You cannot generate a document because approval is required for the quote. Instead, you may choose to preview the document');
+                        document.getElementsByClassName("generateDOCXDocument w2icon")[0].classList.add("info");
+                        document.getElementsByClassName("generateDOCXDocument w2icon")[0].classList.add("disable-w2icon");
+                        document.getElementsByClassName("generateDOCXDocument w2icon")[0].setAttribute('title', 'You cannot generate a document because approval is required for the quote. Instead, you may choose to preview the document');
+
+                    }
+                    if (document.getElementsByClassName("cr_pdf")[0] != undefined && (data.Quote_Status == "Quote in Draft / Preparation" || data.Quote_Status == "Quote Pending Internal Approval")) {
+                        document.getElementsByClassName("cr_pdf")[0].classList.add("info");
+                        document.getElementsByClassName("cr_pdf")[0].classList.add("disable-picon");
+                        document.getElementsByClassName("cr_pdf")[0].setAttribute('title', 'You cannot generate a document because approval is required for the quote. Instead, you may choose to preview the document');
+                        document.getElementsByClassName("cr_word")[0].classList.add("info");
+                        document.getElementsByClassName("cr_word")[0].classList.add("disable-wicon");
+                        document.getElementsByClassName("cr_word")[0].setAttribute('title', 'You cannot generate a document because approval is required for the quote. Instead, you may choose to preview the document');
+                        document.getElementsByClassName("cr_docx")[0].classList.add("info");
+                        document.getElementsByClassName("cr_docx")[0].classList.add("disable-w2icon");
+                        document.getElementsByClassName("cr_docx")[0].setAttribute('title', 'You cannot generate a document because approval is required for the quote. Instead, you may choose to preview the document');
+
+                    }
+                    if ((data.Quote_Status != "Quote in Draft / Preparation" && data.Quote_Status != "Quote Received Internal Approval" && data.Quote_Status != "Quote Pending Internal Approval" && data.Quote_Status != "Regenerating Quote Document" && data.Quote_Status != "Quote did not receive internal approval (rejected)") && $('form').length === 0) {
+
+                        $('table tbody').each(function () {
+                            $(this).find("td input:text").each(function () {
+                                textVal = this.value;
+                                $(this).attr('readonly', true);
+
+                            });
+                        });
+
+                        if ($(".QuoteStatusValidation")) {
+                            $('.QuoteStatusValidation').attr('disabled', true);
+                            $('.QuoteStatusValidation').css('pointer-events', 'none');
+                        }
+
+                        if ($(".fiori3-copy-delete")) {
+                            $(".fiori3-copy-delete").css('pointer-events', 'none');
+                        }
+                        if ($(".Bit_Program")) {
+                            $(".Bit_Program").css('pointer-events', 'none');
+                        }
+                        let btnWell = $('#btn_AddWell');
+                        if (btnWell != undefined) {
+                            $('#btn_AddWell').hide();
+                            $('#btn_AddRig').hide();
+                            $('#btn_AddWellSearch').hide();
+                            $('#btn_AddRigSearch').hide();
+                        }
+                    }
+
+                    if (data.Quote_Status == "Quote Pending Internal Approval") {
+                        if ($('.action-row').children() != undefined) {
+                            if ($('.action-row').children().children().length > 0 && $('.action-row').children().children()[0].textContent == "Request Approval") {
+                                $('.action-row').children().children()[0].textContent = '';
+                                $('.action-row').children().children()[0].textContent = 'Approve/Reject Quote';
+                            }
+                        }
+                    }
+                });
+            cpq.server.executeScript("GetUserTypeOfUser", {}, function (data) {
+                console.log(data)
+                localStorage.setItem("User_Type", data.User_Type);
+                cpq.models['User_Type'] = data.User_Type
+                if (data.User_Type == "Customer Quote Acceptance") {
+                    if ($('.fiori3-single-action-list') != undefined) {
+                        $('.fiori3-single-action-list').hide();
+                    }
+                }
+                if (data.User_Type != "Sales") {
+                    $('table tbody').each(function () {
+                        $(this).find("td input:text").each(function () {
+                            textVal = this.value;
+                            $(this).attr('readonly', true);
+                        });
+                    });
+                    let btnWell = $('#btn_AddWell');
+                    if (btnWell != undefined) {
+                        $('#btn_AddWell').hide();
+                        $('#btn_AddRig').hide();
+
+                        $('#btn_AddWellSearch').hide();
+                        $('#btn_AddRigSearch').hide();
+                    }
+                }
+            });
+
+            if ($('div').hasClass('createtemplate')) {
+                $(".createtemplate.createtemplateBoth").hide();
+            }
+
+        });
+    });
+    function bb(e) {
+        console.log('event', e);
+        e.target.parentElement.style.display = 'none'
+    }
+    if (document.getElementById('ctl01_MainContentPlaceHolder_hfdUserId')) {
+        var a = '<div class="alert fiori3-alert fiori3-alert-info fiori3-alert-info-border"><strong>Danger!</strong> Dont change this sections.</div>'
+        $('#ctl01_MainContentPlaceHolder_hfdUserId').after(a)
+    }
+
+</script>
+<style>
+    .generateWordDocument,
+    .cr_word {
+        background-image: url(/mt/BAKERHUGHES_DEV_NEW/additionalfiles/images/Documents/BH_doc.png) !important;
+    }
+
+    .generateDOCXDocument,
+    .cr_docx {
+        background-image: url(/mt/BAKERHUGHES_DEV_NEW/additionalfiles/images/Documents/BH_docx.png) !important;
+    }
+
+    .generatePDFDocument,
+    .cr_pdf {
+        background-image: url(/mt/BAKERHUGHES_DEV_NEW/additionalfiles/images/Documents/BH_pdf.png);
+    }
+
+    .prewicon,
+    .cr_preview,
+    .previewProposal {
+        background-image: url(/mt/BAKERHUGHES_DEV_NEW/additionalfiles/images/Documents/BH_preview.png) !important;
+    }
+
+    .customizeDocument {
+        background-image: url(/mt/BAKERHUGHES_DEV_NEW/additionalfiles/images/Documents/BH_docxcustomise.png) !important;
+    }
+
+    .dicon,
+    .download_preview {
+        background-image: url(/mt/BAKERHUGHES_DEV_NEW/additionalfiles/images/Documents/BH_download.png) !important;
+    }
+
+    .deficon {
+        background-image: url(/mt/BAKERHUGHES_DEV_NEW/additionalfiles/images/Documents/BH_replace.png) !important;
+    }
+
+    .disable-picon {
+        color: #777777;
+        pointer-events: none;
+        background-image: url(/Content/images/legacy_pdf_off.png);
+
+    }
+
+    .disable-wicon {
+        color: #777777;
+        pointer-events: none;
+        background-image: url(/Content/images/legacy_doc_off.png) !important;
+    }
+
+    .disable-w2icon {
+        color: #777777;
+        pointer-events: none;
+        background-image: url(/Content/images/legacy_doc_off.png) !important;
+    }
+
+    .alert {
+        padding: 20px;
+        background-color: #f44336;
+        color: white;
+
+    }
+
+    .closebtn {
+        margin-left: 15px;
+        color: white;
+        font-weight: bold;
+        float: right;
+        font-size: 22px;
+        line-height: 20px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .closebtn:hover {
+        color: black;
+</style>

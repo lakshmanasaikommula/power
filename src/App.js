@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import { PropTypes } from "prop-types";
+import "./App.css";
+import Info from "./Info.js";
 
+/*adding value to the props*/
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Info title="My App" />
+      <Additem text="Sai" number="Hello" sai="kommula" />
+      <Additem text="Sai" number={2} sai="kommula" />
     </div>
   );
 }
+
+/*creating a props and using below*/
+function Additem(props) {
+  return (
+    <form>
+      <label for="text-form">write something......</label>
+      <input type="text" value={props.text} id="text-form" />
+      <p>{props.number}</p>
+    </form>
+  );
+}
+
+Additem.defaultProps = {
+  number: 22,
+  text: "Defualt",
+};
+
+Additem.defaultProps = {
+  number: PropTypes.number,
+  text: PropTypes.string,
+};
 
 export default App;
